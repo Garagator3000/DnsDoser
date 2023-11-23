@@ -5,29 +5,34 @@ import (
 	"os"
 	"strings"
 
+	dnsddoser "dns_ddoser/internal/dns-ddoser"
+
 	"gopkg.in/yaml.v3"
 )
 
 const (
 	defaultShowConfig = false
 	defaultWait       = false
-	defaultCount      = 1
+	defaultCount      = 0
 	defaultConfigFile = "./dns_ddos.yaml"
-	defaultQuiet      = false
-	defaultTimeout    = 20000
+	defaultTimeout    = 2000
 	defaultDNSServer  = "127.0.0.53:53"
 	defaultHostnames  = ""
+	defaultLoglvl     = dnsddoser.Disable
+	defaultLoglvlstr  = "info"
 )
 
 type Config struct {
 	ShowConfig bool
 	Wait       bool
 	Count      int
-	Quiet      bool
+	Loglevel   dnsddoser.Loglevel
 	Timeout    int
 	DNSServer  string
 	Hostnames  []string `yaml:"hostnames"`
 }
+
+var loglvl dnsddoser.Loglevel
 
 func loadConfig(config *Config) error {
 	help := flag.Bool("help", false, "usage")
@@ -35,10 +40,10 @@ func loadConfig(config *Config) error {
 	wait := flag.Bool("wait", defaultWait, "press enter for continue")
 	hostnames := flag.String("hosts", defaultHostnames, "hostnames for testing DNS. (--hosts ya.ru,google.com)")
 	hostnamesFile := flag.String("config", defaultConfigFile, "file with test hosts")
-	quiet := flag.Bool("quiet", defaultQuiet, "disable output")
 	timeout := flag.Int("timeout", defaultTimeout, "timeout for dns request")
 	dnsServer := flag.String("dns", defaultDNSServer, "ip:port dns server for ddos")
 	showConfig := flag.Bool("show-conf", defaultShowConfig, "show configuration of Application before run")
+	loglvlstr := flag.String("loglvl", defaultLoglvlstr, "log level (disable, errors, warn, info)")
 	flag.Parse()
 
 	if *help {
@@ -50,8 +55,8 @@ func loadConfig(config *Config) error {
 	config.Wait = *wait
 	config.Count = *count
 	config.DNSServer = *dnsServer
-	config.Quiet = *quiet
 	config.Timeout = *timeout
+	config.Loglevel = loglvl.Parse(*loglvlstr)
 
 	if *hostnames != "" {
 		config.Hostnames = strings.Split(*hostnames, ",")

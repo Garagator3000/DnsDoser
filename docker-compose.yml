@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   ddoser:
-    image: dns_ddoser:latest
+    image: garagator3000/dns_ddoser:1.3
     build:
       context: .
       dockerfile: Dockerfile
@@ -10,5 +10,5 @@ services:
       - ./dns_ddos.yaml:/dns_ddos.yaml
     network_mode: host
     deploy:
-      replicas: 5
-    entrypoint: "/dns_ddoser --count 100 --dns 255.255.255.254:5300 --quiet --timeout 30000"
+      replicas: 4
+    entrypoint: "/dns_ddoser --count 100 --dns 10.0.0.22:5300 --loglvl info"

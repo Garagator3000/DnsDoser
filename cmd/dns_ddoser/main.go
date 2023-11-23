@@ -33,7 +33,7 @@ func main() {
 	wg.Add(config.Count)
 	for i := 0; i < config.Count; i++ {
 		hostname := config.Hostnames[i%len(config.Hostnames)]
-		ctx := dnsddoser.ContextWithResolverHostnameWG(resolver, hostname, wg, &counter, !config.Quiet)
+		ctx := dnsddoser.ContextWithResolverHostnameWG(resolver, hostname, wg, &counter, config.Loglevel)
 		go dnsddoser.SendDnsRequest(ctx)
 	}
 	wg.Wait()

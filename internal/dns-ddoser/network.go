@@ -27,8 +27,10 @@ func SendDnsRequest(ctx Context) ([]string, error) {
 
 	addrs, err := ctx.Resolver.LookupHost(context.Background(), ctx.Hostname)
 	if err != nil {
-		printer = color.New(color.FgRed)
-		printer.Printf("cannot resolve %s: %s\n", ctx.Hostname, err)
+		if ctx.Report {
+			printer = color.New(color.FgRed)
+			printer.Printf("cannot resolve %s: %s\n", ctx.Hostname, err)
+		}
 	} else {
 		ctx.Counter.Add(1)
 		if ctx.Report {

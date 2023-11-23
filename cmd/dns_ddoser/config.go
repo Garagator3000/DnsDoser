@@ -14,7 +14,7 @@ const (
 	defaultCount      = 1
 	defaultConfigFile = "./dns_ddos.yaml"
 	defaultQuiet      = false
-	defaultTimeout    = 10000
+	defaultTimeout    = 20000
 	defaultDNSServer  = "127.0.0.53:53"
 	defaultHostnames  = ""
 )

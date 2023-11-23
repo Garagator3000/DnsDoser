@@ -1,9 +1,5 @@
 version: "3.8"
 
-networks:
-  galera:
-    external: true
-
 services:
   ddoser:
     image: dns_ddoser:latest
@@ -11,9 +7,8 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./dns_ddos.yaml.recover:/dns_ddos.yaml
+      - ./dns_ddos.yaml:/dns_ddos.yaml
+    network_mode: host
     deploy:
-      replicas: 50
-    networks:
-      - galera
-    entrypoint: "/dns_ddoser --count 10000 --dns 8.8.8.8:53 --quiet"
+      replicas: 5
+    entrypoint: "/dns_ddoser --count 100 --dns 255.255.255.254:5300 --quiet --timeout 30000"
